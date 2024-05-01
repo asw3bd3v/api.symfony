@@ -79,3 +79,43 @@ php bin/console doctrine:migrations:diff
 ```
 php bin/console doctrine:migrations:migrate
 ```
+
+## Создание фикстур
+
+Устанавливаем пакет orm-fixtures.
+
+```
+composer require --dev orm-fixtures
+```
+
+Создаем фикстуры BookCategoryFixtures.
+
+```
+php bin/console make:fixtures
+```
+
+```php
+namespace App\DataFixtures;
+
+use App\Entity\BookCategory;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+
+class BookCategoryFixtures extends Fixture
+{
+    public function load(ObjectManager $manager): void
+    {
+        $manager->persist((new BookCategory())->setTitle("Database")->setSlug("database"));
+        $manager->persist((new BookCategory())->setTitle("Android")->setSlug("android"));
+        $manager->persist((new BookCategory())->setTitle("Network")->setSlug("network"));
+
+        $manager->flush();
+    }
+}
+```
+
+Запускаем установку фикстур.
+
+```
+php bin/console doctrine:fixture:load --purge-with-truncate
+```
