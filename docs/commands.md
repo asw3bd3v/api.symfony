@@ -43,8 +43,32 @@ php bin/console make:migration
 php bin/console doctrine:migrations:migrate
 ```
 
-## Установка линтера
+## Установка линтеров
+
+### PHP CS Fixer
 
 ```
 composer require --dev friendsofphp/php-cs-fixer
+```
+
+Просмотр команд.
+
+```
+./vendor/bin/php-cs-fixer
+```
+
+Запускаем команду.
+
+```
+./vendor/bin/php-cs-fixer fix
+```
+
+### PHPStan
+
+```
+composer require --dev phpstan/phpstan
+```
+
+```
+vendor/bin/phpstan analyse src
 ```

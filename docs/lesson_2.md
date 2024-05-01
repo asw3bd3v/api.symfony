@@ -118,7 +118,9 @@ class DefaultController extends AbstractController
 }
 ```
 
-## Установка линтера
+## Установка линтеров
+
+### PHP CS Fixer
 
 ```
 composer require --dev friendsofphp/php-cs-fixer
@@ -134,4 +136,14 @@ composer require --dev friendsofphp/php-cs-fixer
 
 ```
 ./vendor/bin/php-cs-fixer fix
+```
+
+### PHPStan
+
+```
+composer require --dev phpstan/phpstan
+```
+
+```
+vendor/bin/phpstan analyse src
 ```
