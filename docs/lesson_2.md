@@ -117,3 +117,21 @@ class DefaultController extends AbstractController
     }
 }
 ```
+
+## Установка линтера
+
+```
+composer require --dev friendsofphp/php-cs-fixer
+```
+
+Просмотр команд.
+
+```
+./vendor/bin/php-cs-fixer
+```
+
+Запускаем команду.
+
+```
+./vendor/bin/php-cs-fixer fix
+```
