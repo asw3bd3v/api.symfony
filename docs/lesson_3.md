@@ -119,3 +119,69 @@ class BookCategoryFixtures extends Fixture
 ```
 php bin/console doctrine:fixture:load --purge-with-truncate
 ```
+
+## Тестирование
+
+Установим необходимые пакеты.
+
+```
+composer require --dev symfony/test-pack
+
+symfony composer req phpunit --dev
+```
+
+#### Важно
+
+Возможно из-за того, что устанавливается PHPUnit 11 версии, конфиг в phpunit.xml.dist не соответствует. Чтобы в консоли не было "лишних" сообщений, часть атрибутов удалена, а часть тегов закомментирована.
+
+Команда для запуска тестов.
+
+```
+php bin/phpunit
+```
+
+Создадим первый тест.
+
+```
+symfony console make:test TestCase Service\BookCategoryServiceTest
+```
+
+```php
+<?php
+
+namespace App\Tests\Service;
+
+use App\Entity\BookCategory;
+use App\Model\BookCategoryListItem;
+use App\Model\BookCategoryListResponse;
+use App\Repository\BookCategoryRepository;
+use App\Service\BookCategoryService;
+use Doctrine\Common\Collections\Criteria;
+use PHPUnit\Framework\TestCase;
+
+class BookCategoryServiceTest extends TestCase
+{
+    public function testGetCategories(): void
+    {
+        $repository = $this->createMock(BookCategoryRepository::class);
+
+        $repository->expects($this->once())
+            ->method("findBy")
+            ->with([], ['title' => Criteria::ASC])
+            ->willReturn([
+                (new BookCategory())
+                    ->setId(1)
+                    ->setTitle('Test')
+                    ->setSlug('test')
+            ]);
+
+        $service = new BookCategoryService($repository);
+
+        $expected = new BookCategoryListResponse([
+            new BookCategoryListItem(1, 'Test', 'test'),
+        ]);
+
+        $this->assertEquals($expected, $service->getCategories());
+    }
+}
+```
