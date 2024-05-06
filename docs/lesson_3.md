@@ -4,8 +4,8 @@
 
 Создадим модели:
 
-- BookCategoryListResponse - то что будет отдаваться пользователю
-- BookCategoryListItem - составная часть BookCategoryListResponse
+-   BookCategoryListResponse - то что будет отдаваться пользователю
+-   BookCategoryListItem - составная часть BookCategoryListResponse
 
 Создадим сервис BookCategoryService.
 
@@ -185,3 +185,72 @@ class BookCategoryServiceTest extends TestCase
     }
 }
 ```
+
+## Swagger
+
+Установим пакет nelmio/api-doc-bundle.
+
+```
+composer require nelmio/api-doc-bundle
+```
+
+Обновим config\packages\nelmio_api_doc.yaml.
+
+```yml
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Publisher API
+            description: API for publishing books and more
+            version: 1.0.0
+    areas: # to filter documented areas
+        path_patterns:
+            #- ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+            - ^/api/v1
+```
+
+Устанавливаем пакеты для рендера документации и обновим config\routes\nelmio_api_doc.yaml.
+
+```
+composer require twig asset
+```
+
+```yml
+app.swagger:
+    path: /api/doc.json
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger }
+
+## Requires the Asset component and the Twig bundle
+## $ composer require twig asset
+app.swagger_ui:
+    path: /api/doc
+    methods: GET
+    defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+```
+
+Документируем наш контроллер.
+
+```php
+
+// ...
+use OpenApi\Attributes as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
+
+class BookCategoryController extends AbstractController
+{
+    #[Route('/api/v1/book/categories')]
+    #[OA\Response(
+        response: 200,
+        description: 'Return book categories',
+        content: new Model(type: BookCategoryListResponse::class)
+    )]
+    public function categories(): Response
+    {
+        return $this->json($this->bookCategoryService->getCategories());
+    }
+}
+
+```
+
+Открываем по адресу loc
