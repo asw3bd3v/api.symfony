@@ -47,6 +47,26 @@ php bin/console doctrine:migrations:diff
 php bin/console doctrine:migrations:migrate
 ```
 
+## Создание фикстур
+
+Устанавливаем пакет orm-fixtures.
+
+```
+composer require --dev orm-fixtures
+```
+
+Создаем фикстуры BookCategoryFixtures.
+
+```
+php bin/console make:fixtures
+```
+
+Запускаем установку фикстур.
+
+```
+php bin/console doctrine:fixture:load --purge-with-truncate
+```
+
 ## Установка линтеров
 
 ### PHP CS Fixer
@@ -75,4 +95,20 @@ composer require --dev phpstan/phpstan
 
 ```
 vendor/bin/phpstan analyse src
+```
+
+## Тестирование
+
+Установим необходимые пакеты.
+
+```
+composer require --dev symfony/test-pack
+
+symfony composer req phpunit --dev
+```
+
+Команда для запуска тестов.
+
+```
+php bin/phpunit
 ```
