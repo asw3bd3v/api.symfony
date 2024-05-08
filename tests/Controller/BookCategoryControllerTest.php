@@ -2,9 +2,9 @@
 
 namespace App\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Tests\AbstractWebTestCase;
 
-class BookCategoryControllerTest extends WebTestCase
+class BookCategoryControllerTest extends AbstractWebTestCase
 {
     public function testCategories(): void
     {
@@ -17,27 +17,5 @@ class BookCategoryControllerTest extends WebTestCase
             __DIR__ . '/responses/BookCategoryControllerTest_testCategories.json',
             $responseContent,
         );
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->restoreExceptionHandler();
-    }
-
-    protected function restoreExceptionHandler(): void
-    {
-        while (true) {
-            $previousHandler = set_exception_handler(static fn () => null);
-
-            restore_exception_handler();
-
-            if ($previousHandler === null) {
-                break;
-            }
-
-            restore_exception_handler();
-        }
     }
 }
