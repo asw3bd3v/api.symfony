@@ -70,7 +70,6 @@ class BookListItem
 
     /**
      * @param string[] $authors
-     * @return static
      */
     public function setAuthors(array $authors): static
     {

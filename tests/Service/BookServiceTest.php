@@ -11,7 +11,6 @@ use App\Repository\BookCategoryRepository;
 use App\Repository\BookRepository;
 use App\Service\BookService;
 use App\Tests\AbstractTestCase;
-use DateTime;
 
 class BookServiceTest extends AbstractTestCase
 {
@@ -19,7 +18,7 @@ class BookServiceTest extends AbstractTestCase
     {
         $bookRepository = $this->createMock(BookRepository::class);
         $bookCategoryRepository = $this->createMock(BookCategoryRepository::class);
-        $bookCategoryRepository->expects(($this->once()))
+        $bookCategoryRepository->expects($this->once())
             ->method('find')
             ->with(130)
             ->willThrowException(new BookCategoryNotFoundException());
@@ -41,7 +40,7 @@ class BookServiceTest extends AbstractTestCase
         $this->setEntityId($bookCategory, 130);
 
         $bookCategoryRepository = $this->createMock(BookCategoryRepository::class);
-        $bookCategoryRepository->expects(($this->once()))
+        $bookCategoryRepository->expects($this->once())
             ->method('find')
             ->with(130)
             ->willReturn($bookCategory);
@@ -61,7 +60,7 @@ class BookServiceTest extends AbstractTestCase
             ->setMeap(false)
             ->setAuthors(['Tester'])
             ->setImage('http://localhost/test.png')
-            ->setPublicationDate(new DateTime('2020-10-10'));
+            ->setPublicationDate(new \DateTime('2020-10-10'));
 
         $this->setEntityId($book, 123);
 
@@ -77,6 +76,6 @@ class BookServiceTest extends AbstractTestCase
             ->setMeap(false)
             ->setAuthors(['Tester'])
             ->setImage('http://localhost/test.png')
-            ->setPublicationDate((new DateTime('2020-10-10'))->getTimestamp());
+            ->setPublicationDate((new \DateTime('2020-10-10'))->getTimestamp());
     }
 }

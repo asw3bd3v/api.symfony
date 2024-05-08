@@ -5,7 +5,7 @@ namespace App\Model;
 class BookListResponse
 {
     /**
-     * @var BookListItem[] $items
+     * @var BookListItem[]
      */
     private array $items;
 

@@ -9,12 +9,12 @@ class BookCategoryControllerTest extends AbstractWebTestCase
     public function testCategories(): void
     {
         $client = static::createClient();
-        $client->request("GET", "/api/v1/book/categories");
+        $client->request('GET', '/api/v1/book/categories');
         $responseContent = $client->getResponse()->getContent();
 
         $this->assertResponseIsSuccessful();
         $this->assertJsonStringEqualsJsonFile(
-            __DIR__ . '/responses/BookCategoryControllerTest_testCategories.json',
+            __DIR__.'/responses/BookCategoryControllerTest_testCategories.json',
             $responseContent,
         );
     }

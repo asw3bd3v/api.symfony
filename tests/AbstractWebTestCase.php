@@ -20,7 +20,7 @@ abstract class AbstractWebTestCase extends WebTestCase
 
             restore_exception_handler();
 
-            if ($previousHandler === null) {
+            if (null === $previousHandler) {
                 break;
             }
 

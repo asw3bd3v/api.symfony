@@ -14,15 +14,15 @@ class BookCategoryFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $categories = [
-            self::ANDROID_CATEGORY => (new BookCategory())->setTitle("Android")->setSlug("android"),
-            self::DATABASE_CATEGORY => (new BookCategory())->setTitle("Database")->setSlug("database"),
+            self::ANDROID_CATEGORY => (new BookCategory())->setTitle('Android')->setSlug('android'),
+            self::DATABASE_CATEGORY => (new BookCategory())->setTitle('Database')->setSlug('database'),
         ];
 
         foreach ($categories as $category) {
             $manager->persist($category);
         }
 
-        $manager->persist((new BookCategory())->setTitle("Network")->setSlug("network"));
+        $manager->persist((new BookCategory())->setTitle('Network')->setSlug('network'));
 
         $manager->flush();
 
