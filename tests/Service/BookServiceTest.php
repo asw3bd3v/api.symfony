@@ -10,10 +10,10 @@ use App\Model\BookListResponse;
 use App\Repository\BookCategoryRepository;
 use App\Repository\BookRepository;
 use App\Service\BookService;
+use App\Tests\AbstractTestCase;
 use DateTime;
-use PHPUnit\Framework\TestCase;
 
-class BookServiceTest extends TestCase
+class BookServiceTest extends AbstractTestCase
 {
     public function testGetBooksByCategoryNotFound()
     {
@@ -37,11 +37,14 @@ class BookServiceTest extends TestCase
             ->with(130)
             ->willReturn([$this->createBookEntity()]);
 
+        $bookCategory = new BookCategory();
+        $this->setEntityId($bookCategory, 130);
+
         $bookCategoryRepository = $this->createMock(BookCategoryRepository::class);
         $bookCategoryRepository->expects(($this->once()))
             ->method('find')
             ->with(130)
-            ->willReturn((new BookCategory())->setId(130));
+            ->willReturn($bookCategory);
 
         $service = new BookService($bookRepository, $bookCategoryRepository);
 
@@ -52,14 +55,17 @@ class BookServiceTest extends TestCase
 
     private function createBookEntity(): Book
     {
-        return (new Book())
-            ->setId(123)
+        $book = (new Book())
             ->setTitle('Test Book')
             ->setSlug('test-book')
             ->setMeap(false)
             ->setAuthors(['Tester'])
             ->setImage('http://localhost/test.png')
             ->setPublicationDate(new DateTime('2020-10-10'));
+
+        $this->setEntityId($book, 123);
+
+        return $book;
     }
 
     private function createBookItemModel(): BookListItem
