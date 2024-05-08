@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Model\BookCategoryListResponse;
-use App\Repository\BookRepository;
 use App\Service\BookCategoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
