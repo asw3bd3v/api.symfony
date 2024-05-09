@@ -18,6 +18,7 @@ class ApiExceptionListener
         private ExceptionMappingResolver $exceptionMappingResolver,
         private LoggerInterface $logger,
         private SerializerInterface $serializer,
+        private bool $isDebug,
     ) {
     }
 
@@ -44,10 +45,10 @@ class ApiExceptionListener
             ? Response::$statusTexts[$mapping->getCode()]
             : $throwable->getMessage();
 
-        $data = $this->serializer->serialize(new ErrorResponse($message), JsonEncoder::FORMAT);
+        $details = $this->isDebug ? ['trace' => $throwable->getTraceAsString(),] : null;
 
-        $response = new JsonResponse($data, $mapping->getCode(), [], true);
+        $data = $this->serializer->serialize(new ErrorResponse($message, $details), JsonEncoder::FORMAT);
 
-        $event->setResponse($response);
+        $event->setResponse(new JsonResponse($data, $mapping->getCode(), [], true));
     }
 }
