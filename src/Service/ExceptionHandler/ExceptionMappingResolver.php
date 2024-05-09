@@ -4,6 +4,8 @@ namespace App\Service\ExceptionHandler;
 
 class ExceptionMappingResolver
 {
+    const DEFAULT_HIDDEN = true;
+    const DEFAULT_LOGGABLE = false;
     /**
      * @var ExceptionMapping[]
      */
@@ -19,8 +21,8 @@ class ExceptionMappingResolver
             $this->addMapping(
                 $class,
                 $mapping['code'],
-                $mapping['hidden'] ?? true,
-                $mapping['loggable'] ?? false
+                $mapping['hidden'] ?? self::DEFAULT_HIDDEN,
+                $mapping['loggable'] ?? self::DEFAULT_LOGGABLE,
             );
         }
     }
