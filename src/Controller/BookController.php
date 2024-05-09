@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Model\BookListResponse;
+use App\Model\ErrorResponse;
 use App\Service\BookService;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
@@ -21,6 +22,11 @@ class BookController extends AbstractController
         response: 200,
         description: 'Return books inside a category',
         content: new Model(type: BookListResponse::class)
+    )]
+    #[OA\Response(
+        response: 404,
+        description: 'Book category not found',
+        content: new Model(type: ErrorResponse::class)
     )]
     public function booksByCategory(int $id): Response
     {
