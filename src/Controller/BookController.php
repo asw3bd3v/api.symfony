@@ -2,14 +2,12 @@
 
 namespace App\Controller;
 
-use App\Exception\BookCategoryNotFoundException;
 use App\Model\BookListResponse;
 use App\Service\BookService;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 class BookController extends AbstractController
@@ -26,10 +24,6 @@ class BookController extends AbstractController
     )]
     public function booksByCategory(int $id): Response
     {
-        try {
-            return $this->json($this->bookService->getBooksByCategory($id));
-        } catch (BookCategoryNotFoundException $exception) {
-            throw new HttpException($exception->getCode(), $exception->getMessage());
-        }
+        return $this->json($this->bookService->getBooksByCategory($id));
     }
 }
