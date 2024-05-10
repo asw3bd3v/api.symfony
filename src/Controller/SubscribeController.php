@@ -24,6 +24,8 @@ class SubscribeController extends AbstractController
         response: 200,
         description: 'Subscribe email to newsletter mailing list',
     )]
+    #[OA\Response(response: 400, description: 'Validation failed', attachables: [new Model(type: ErrorResponse::class)])]
+    #[OA\RequestBody(attachables: [new Model(type: SubscriberRequest::class)])]
     public function subscribe(#[RequestBody] SubscriberRequest $request): Response
     {
         $this->subscriberService->subscribe($request);
