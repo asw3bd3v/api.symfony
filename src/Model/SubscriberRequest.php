@@ -12,6 +12,7 @@ class SubscriberRequest
     #[NotBlank]
     private string $email;
     #[IsTrue]
+    #[NotBlank]
     private bool $agreed;
 
     public function getEmail(): string
