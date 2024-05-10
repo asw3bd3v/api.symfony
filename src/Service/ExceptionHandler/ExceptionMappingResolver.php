@@ -34,9 +34,8 @@ class ExceptionMappingResolver
         foreach ($this->mappings as $class => $mapping) {
             if ($throwableClass === $class || is_subclass_of($throwableClass, $class)) {
                 $foundMapping = $mapping;
+                break;
             }
-
-            break;
         }
 
         return $foundMapping;
