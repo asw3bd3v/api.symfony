@@ -2,9 +2,16 @@
 
 namespace App\Model;
 
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\NotBlank;
+
 class SubscriberRequest
 {
+    #[Email]
+    #[NotBlank]
     private string $email;
+    #[IsTrue]
     private bool $agreed;
 
     public function getEmail(): string
