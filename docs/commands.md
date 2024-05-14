@@ -48,6 +48,13 @@ php bin/console doctrine:migrations:migrate
 php bin/console doctrine:migrations:migrate --env=test
 ```
 
+Удаление таблиц
+
+```sql
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+```
+
 ## Создание фикстур
 
 Устанавливаем пакет orm-fixtures.
