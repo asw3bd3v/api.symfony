@@ -2,7 +2,10 @@
 
 namespace App\Model;
 
+use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
+use App\Model\ErrorDebugDetails;
+use App\Model\ErrorValidationDetails;
 
 class ErrorResponse
 {
@@ -15,8 +18,15 @@ class ErrorResponse
         return $this->message;
     }
 
-    
-    #[OA\Property(type: "object")]
+
+    #[OA\Property(
+        type: 'object',
+        nullable: true,
+        oneOf: [
+            new OA\Schema(ref: new Model(type: ErrorDebugDetails::class)),
+            new OA\Schema(ref: new Model(type: ErrorValidationDetails::class))
+        ]
+    )]
     public function getDetails(): mixed
     {
         return $this->details;
