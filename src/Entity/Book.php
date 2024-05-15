@@ -40,9 +40,29 @@ class Book
     #[ORM\ManyToMany(targetEntity: BookCategory::class, inversedBy: 'books')]
     private Collection $categories;
 
+    #[ORM\Column(length: 13, nullable: true)]
+    private ?string $isbn = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    /**
+     * @var Collection<int, BookToBookFormat>
+     */
+    #[ORM\OneToMany(targetEntity: BookToBookFormat::class, mappedBy: 'book')]
+    private Collection $formats;
+
+    /**
+     * @var Collection<int, Review>
+     */
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book', orphanRemoval: true)]
+    private Collection $reviews;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->formats = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,6 +162,97 @@ class Book
     public function removeCategory(BookCategory $category): static
     {
         $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    public function getIsbn(): ?string
+    {
+        return $this->isbn;
+    }
+
+    public function setIsbn(?string $isbn): static
+    {
+        $this->isbn = $isbn;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BookToBookFormat>
+     */
+    public function getFormats(): Collection
+    {
+        return $this->formats;
+    }
+
+    public function setFormats(Collection $formats): static
+    {
+        $this->formats = $formats;
+
+        return $this;
+    }
+
+    public function addFormat(BookToBookFormat $format): static
+    {
+        if (!$this->formats->contains($format)) {
+            $this->formats->add($format);
+            $format->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFormat(BookToBookFormat $format): static
+    {
+        if ($this->formats->removeElement($format)) {
+            // set the owning side to null (unless already changed)
+            if ($format->getBook() === $this) {
+                $format->setBook(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Review $review): static
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews->add($review);
+            $review->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Review $review): static
+    {
+        if ($this->reviews->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getBook() === $this) {
+                $review->setBook(null);
+            }
+        }
 
         return $this;
     }
