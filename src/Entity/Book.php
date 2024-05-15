@@ -28,7 +28,7 @@ class Book
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
     private ?array $authors = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     private ?\DateTimeInterface $publicationDate = null;
 
     #[ORM\Column]
