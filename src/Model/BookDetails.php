@@ -137,4 +137,28 @@ class BookDetails
 
         return $this;
     }
+
+    public function getCategories(): array
+    {
+        return $this->categories;
+    }
+
+    public function setCategories(array $categories): static
+    {
+        $this->categories = $categories;
+
+        return $this;
+    }
+
+    public function getFormats(): array
+    {
+        return $this->formats;
+    }
+
+    public function setFormats(array $formats): static
+    {
+        $this->formats = $formats;
+
+        return $this;
+    }
 }
