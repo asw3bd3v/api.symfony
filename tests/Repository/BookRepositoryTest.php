@@ -43,6 +43,8 @@ class BookRepositoryTest extends AbstractRepositoryTest
             ->setTitle($title)
             ->setAuthors(['author'])
             ->setMeap(false)
+            ->setIsbn('123321')
+                ->setDescription('test description')
             ->setSlug($title)
             ->addCategory($category)
             ->setImage('http://localhost/' . $title . '.png');

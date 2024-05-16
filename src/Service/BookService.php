@@ -42,7 +42,7 @@ class BookService
         $book = $this->bookRepository->getById($id);
         $reviews = $this->reviewRepository->countByBookId($id);
         $ratingSum = $this->reviewRepository->getBookTotalRatingSum($id);
-
+        $rating = $reviews > 0 ? $ratingSum / $reviews : 0;
         $categories = $book->getCategories()
             ->map(fn (BookCategory $bookCategory) => new BookCategoryModel(
                 $bookCategory->getId(),
@@ -58,7 +58,7 @@ class BookService
             ->setAuthors($book->getAuthors())
             ->setMeap($book->isMeap())
             ->setPublicationDate($book->getPublicationDate()->getTimestamp())
-            ->setRating($ratingSum / $reviews)
+            ->setRating($rating)
             ->setReviews($reviews)
             ->setFormats($this->mapFormats($book->getFormats()))
             ->setCategories($categories->toArray());

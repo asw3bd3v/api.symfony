@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Review;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,9 +24,20 @@ class ReviewRepository extends ServiceEntityRepository
 
     public function getBookTotalRatingSum(int $id): int
     {
-        return $this->getEntityManager()
+        return (int) $this->getEntityManager()
             ->createQuery('SELECT SUM(r.rating) FROM App\Entity\Review r WHERE r.book = :id')
             ->setParameter('id', $id)
             ->getSingleScalarResult();
+    }
+
+    public function getPageByBookId(int $id, int $offset, int $limit): Paginator
+    {
+        $query = $this->getEntityManager()
+            ->createQuery('SELECT r FROM App\Entity\Review r WHERE r.book = :id ORDER BY r.createdAt DESC')
+            ->setParameter('id', $id)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        return new Paginator($query, false);
     }
 }
