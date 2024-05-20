@@ -23,6 +23,7 @@ class BookService
         private BookRepository $bookRepository,
         private BookCategoryRepository $bookCategoryRepository,
         private ReviewRepository $reviewRepository,
+        private RatingService $ratingService,
     ) {
     }
 
@@ -42,8 +43,7 @@ class BookService
     {
         $book = $this->bookRepository->getById($id);
         $reviews = $this->reviewRepository->countByBookId($id);
-        $ratingSum = $this->reviewRepository->getBookTotalRatingSum($id);
-        $rating = $reviews > 0 ? $ratingSum / $reviews : 0;
+
         $categories = $book->getCategories()
             ->map(fn (BookCategory $bookCategory) => new BookCategoryModel(
                 $bookCategory->getId(),
@@ -52,7 +52,7 @@ class BookService
             ));
 
         return BookMapper::map($book, new BookDetails())
-            ->setRating($rating)
+            ->setRating($this->ratingService->calcReviewRatingForBook($id, $reviews))
             ->setReviews($reviews)
             ->setFormats($this->mapFormats($book->getFormats()))
             ->setCategories($categories->toArray());
