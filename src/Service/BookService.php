@@ -6,6 +6,7 @@ use App\Entity\Book;
 use App\Entity\BookCategory;
 use App\Entity\BookToBookFormat;
 use App\Exception\BookCategoryNotFoundException;
+use App\Mapper\BookMapper;
 use App\Model\BookDetails;
 use App\Model\BookFormat;
 use App\Model\BookListItem;
@@ -32,7 +33,7 @@ class BookService
         }
 
         return new BookListResponse(array_map(
-            [$this, 'map'],
+            fn (Book $book) => BookMapper::map($book, new BookListItem()),
             $this->bookRepository->findBooksByCategoryId($categoryId)
         ));
     }
@@ -50,14 +51,7 @@ class BookService
                 $bookCategory->getSlug(),
             ));
 
-        return (new BookDetails())
-            ->setId($book->getId())
-            ->setTitle($book->getTitle())
-            ->setSlug($book->getSlug())
-            ->setImage($book->getImage())
-            ->setAuthors($book->getAuthors())
-            ->setMeap($book->isMeap())
-            ->setPublicationDate($book->getPublicationDate()->getTimestamp())
+        return BookMapper::map($book, new BookDetails())
             ->setRating($rating)
             ->setReviews($reviews)
             ->setFormats($this->mapFormats($book->getFormats()))
@@ -79,17 +73,5 @@ class BookService
                 ->setPrice($formatJoin->getPrice())
                 ->setDiscountPercent($formatJoin->getDiscountPercent())
         )->toArray();
-    }
-
-    private function map(Book $book): BookListItem
-    {
-        return (new BookListItem())
-            ->setId($book->getId())
-            ->setTitle($book->getTitle())
-            ->setSlug($book->getSlug())
-            ->setImage($book->getImage())
-            ->setAuthors($book->getAuthors())
-            ->setMeap($book->isMeap())
-            ->setPublicationDate($book->getPublicationDate()->getTimestamp());
     }
 }
