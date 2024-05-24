@@ -15,7 +15,7 @@ use App\Repository\BookCategoryRepository;
 use App\Repository\BookRepository;
 use App\Model\BookCategory as BookCategoryModel;
 use App\Service\Recommendation\Model\RecommendationItem;
-use App\Service\Recommendation\RecommendationService;
+use App\Service\Recommendation\RecommendationApiService;
 use Doctrine\Common\Collections\Collection;
 use Psr\Log\LoggerInterface;
 
@@ -25,7 +25,7 @@ class BookService
         private BookRepository $bookRepository,
         private BookCategoryRepository $bookCategoryRepository,
         private RatingService $ratingService,
-        private RecommendationService $recommendationService,
+        private RecommendationApiService $RecommendationApiService,
         private LoggerInterface $logger,
     ) {
     }
@@ -76,7 +76,7 @@ class BookService
     {
         $ids = array_map(
             fn (RecommendationItem $item) => $item->getId(),
-            $this->recommendationService->getRecommendationsByBookId($bookId)->getRecommendations()
+            $this->RecommendationApiService->getRecommendationsByBookId($bookId)->getRecommendations()
         );
 
         return array_map(
