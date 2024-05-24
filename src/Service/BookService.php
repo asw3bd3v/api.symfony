@@ -14,10 +14,8 @@ use App\Model\BookListResponse;
 use App\Repository\BookCategoryRepository;
 use App\Repository\BookRepository;
 use App\Model\BookCategory as BookCategoryModel;
-use App\Service\Recommendation\Model\RecommendationItem;
-use App\Service\Recommendation\RecommendationApiService;
+
 use Doctrine\Common\Collections\Collection;
-use Psr\Log\LoggerInterface;
 
 class BookService
 {
@@ -25,8 +23,6 @@ class BookService
         private BookRepository $bookRepository,
         private BookCategoryRepository $bookCategoryRepository,
         private RatingService $ratingService,
-        private RecommendationApiService $RecommendationApiService,
-        private LoggerInterface $logger,
     ) {
     }
 
@@ -45,7 +41,6 @@ class BookService
     public function getBookById(int $id): BookDetails
     {
         $book = $this->bookRepository->getById($id);
-        $recommendations = [];
         $rating = $this->ratingService->calcReviewRatingForBook($id);
 
         $categories = $book->getCategories()
@@ -54,35 +49,12 @@ class BookService
                 $bookCategory->getTitle(),
                 $bookCategory->getSlug(),
             ));
-
-        try {
-            $recommendations = $this->getRecommendations($id);
-        } catch (\Exception $exception) {
-            $this->logger->error('Error while fetching recommendations', [
-                'exception' => $exception->getMessage(),
-                'bookId' => $id,
-            ]);
-        }
-
+        
         return BookMapper::map($book, new BookDetails())
             ->setRating($rating->getRating())
             ->setReviews($rating->getTotal())
-            ->setRecommendations($recommendations)
             ->setFormats($this->mapFormats($book->getFormats()))
             ->setCategories($categories->toArray());
-    }
-
-    private function getRecommendations(int $bookId): array
-    {
-        $ids = array_map(
-            fn (RecommendationItem $item) => $item->getId(),
-            $this->RecommendationApiService->getRecommendationsByBookId($bookId)->getRecommendations()
-        );
-
-        return array_map(
-            [BookMapper::class, 'mapRecommended'],
-            $this->bookRepository->findBooksByIds($ids),
-        );
     }
 
     /**
