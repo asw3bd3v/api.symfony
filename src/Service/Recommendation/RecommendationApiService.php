@@ -5,10 +5,10 @@ namespace App\Service\Recommendation;
 use App\Service\Recommendation\Exception\AccessDeniedException;
 use App\Service\Recommendation\Exception\RequestException;
 use App\Service\Recommendation\Model\RecommendationResponse;
+use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class RecommendationApiService
@@ -34,7 +34,7 @@ class RecommendationApiService
                 JsonEncoder::FORMAT
             );
         } catch (\Throwable $exception) {
-            if ($exception instanceof TransportExceptionInterface && Response::HTTP_FORBIDDEN === $exception->getCode()) {
+            if ($exception instanceof ClientException && Response::HTTP_FORBIDDEN === $exception->getCode()) {
                 throw new AccessDeniedException();
             }
 
