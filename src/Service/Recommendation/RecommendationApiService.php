@@ -23,7 +23,7 @@ class RecommendationApiService
      * @throws AccessDeniedException
      * @throws RequestException
      */
-    public function getRecommendationsByBookId(string $id): RecommendationResponse
+    public function getRecommendationsByBookId(int $id): RecommendationResponse
     {
         try {
             $response = $this->recommendationClient->request('GET', '/api/v1/book/' . $id . '/recommendations');
