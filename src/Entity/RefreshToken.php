@@ -12,19 +12,19 @@ use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenInterface;
 #[ORM\HasLifecycleCallbacks]
 class RefreshToken extends BaseRefreshToken
 {
-    #[ORM\Id]
+    /* #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    protected $id;
+    protected $id; */
 
-    #[ORM\Column(type: 'string')]
-    protected $refreshToken;
+    /* #[ORM\Column(type: 'string')]
+    protected $refreshToken; */
 
-    #[ORM\Column(type: 'string')]
-    protected $username;
+    /* #[ORM\Column(type: 'string')]
+    protected $username; */
 
-    #[ORM\Column(type: 'datetime')]
-    protected $valid;
+    /* #[ORM\Column(type: 'datetime')]
+    protected $valid; */
 
     #[ORM\JoinColumn(nullable: false)]
     #[ORM\ManyToOne(targetEntity: User::class)]

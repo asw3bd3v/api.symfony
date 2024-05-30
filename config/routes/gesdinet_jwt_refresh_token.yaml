@@ -1,4 +1,2 @@
 gesdinet_jwt_refresh_token:
-    #path: /api/token/refresh
-    refresh_token_class: App\Entity\RefreshToken
-    single_use: true
+    path: /api/token/refresh
