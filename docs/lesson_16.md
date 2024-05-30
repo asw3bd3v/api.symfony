@@ -38,3 +38,9 @@ Duplicate definition of column 'id' on entity 'App\Entity\RefreshToken' in a fie
     "refresh_token": "..."
 }
 ```
+
+Чтобы удалить старые токены, можно выполнить команду:
+
+```
+php ./bin/console gesdinet:jwt:clear
+```
