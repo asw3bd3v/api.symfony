@@ -21,12 +21,15 @@ security:
             #pattern: ^/api/v1/auth/login
             pattern: ^/api
             stateless: true
+            entry_point: jwt # указываем какой аутентификатор использвать: jwt или refrest_jwt
             json_login:
                 #check_path: /api/v1/auth/login
                 check_path: api_login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             jwt: ~
+            refresh_jwt:
+                check_path: api_refresh_token
             
         #api:
             #pattern:   ^/api
