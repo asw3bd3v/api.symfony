@@ -8,6 +8,8 @@ use App\Model\IdResponse;
 use App\Model\SignUpRequest;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class SignUpService
@@ -16,10 +18,11 @@ class SignUpService
         private UserPasswordHasherInterface $hasher,
         private UserRepository $userRepository,
         private EntityManagerInterface $entityManager,
+        private AuthenticationSuccessHandler $successHandler,
     ) {
     }
 
-    public function signUp(SignUpRequest $signUpRequest): IdResponse
+    public function signUp(SignUpRequest $signUpRequest): Response
     {
         if ($this->userRepository->existsByEmail($signUpRequest->getEmail())) {
             throw new UserAlreadyExistsException();
@@ -35,6 +38,6 @@ class SignUpService
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        return new IdResponse($user->getId());
+        return $this->successHandler->handleAuthenticationSuccess($user);
     }
 }

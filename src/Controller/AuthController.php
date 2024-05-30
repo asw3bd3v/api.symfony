@@ -22,7 +22,7 @@ class AuthController extends AbstractController
     #[Route(path: '/api/v1/auth/signUp', methods: ['POST'])]
     #[OA\Response(
         response: 200,
-        description: 'Signs up a user',
+        description: 'Signs up a user / регистрация пользователя',
         content: new Model(type: IdResponse::class)
     )]
     #[OA\Response(response: 409, description: 'User already exists', attachables: [new Model(type: ErrorResponse::class)])]
@@ -30,6 +30,6 @@ class AuthController extends AbstractController
     #[OA\RequestBody(attachables: [new Model(type: SignUpRequest::class)])]
     public function signUp(#[RequestBody] SignUpRequest $signUpRequest): Response
     {
-        return $this->json($this->signUpService->signUp($signUpRequest));
+        return $this->signUpService->signUp($signUpRequest);
     }
 }
