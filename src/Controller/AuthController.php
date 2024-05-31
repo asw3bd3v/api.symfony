@@ -22,8 +22,11 @@ class AuthController extends AbstractController
     #[Route(path: '/api/v1/auth/signUp', methods: ['POST'])]
     #[OA\Response(
         response: 200,
-        description: 'Signs up a user / регистрация пользователя',
-        content: new Model(type: IdResponse::class)
+        description: 'Signs up a user',
+        content: new OA\JsonContent(properties: [
+            new OA\Property(property: 'token', type: 'string'),
+            new OA\Property(property: 'refresh_token', type: 'string')
+        ])
     )]
     #[OA\Response(response: 409, description: 'User already exists', attachables: [new Model(type: ErrorResponse::class)])]
     #[OA\Response(response: 400, description: 'Validation failed', attachables: [new Model(type: ErrorResponse::class)])]
