@@ -1,4 +1,7 @@
 security:
+    role_hierarchy:
+        ROLE_EDITOR: ROLE_USER
+        ROLE_ADMIN: ROLE_EDITOR
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
@@ -47,7 +50,8 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/api/v1/user, roles: IS_AUTHENTICATED_FULLY }
+        # - { path: ^/api/v1/user, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/v1/user, roles: ROLE_USER }
         - { path: ^/api,       roles: PUBLIC_ACCESS }
 
 when@test:
