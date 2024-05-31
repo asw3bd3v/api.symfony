@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use App\Model\IdResponse;
 use App\Model\SignUpRequest;
 use App\Service\SignUpService;
 use Symfony\Component\HttpFoundation\Response;
