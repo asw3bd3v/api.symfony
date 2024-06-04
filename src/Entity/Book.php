@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -57,6 +58,10 @@ class Book
      */
     #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book', orphanRemoval: true)]
     private Collection $reviews;
+
+    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    private UserInterface $user;
 
     public function __construct()
     {
@@ -253,6 +258,18 @@ class Book
                 $review->setBook(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUser(): UserInterface
+    {
+        return $this->user;
+    }
+
+    public function setUser(UserInterface $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
