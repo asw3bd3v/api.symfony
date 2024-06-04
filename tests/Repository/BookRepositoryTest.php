@@ -18,7 +18,7 @@ class BookRepositoryTest extends AbstractRepositoryTest
         $this->bookRepository = $this->getRepositoryForEntity(Book::class);
     }
 
-    public function testFindBooksByCategoryId()
+    public function testfindPublishedBooksByCategoryId()
     {
         $devicesCategory = (new BookCategory())
             ->setTitle('Devices')
@@ -33,7 +33,7 @@ class BookRepositoryTest extends AbstractRepositoryTest
 
         $this->entityManager->flush();
 
-        $this->assertCount(6, $this->bookRepository->findBooksByCategoryId($devicesCategory->getId()));
+        $this->assertCount(6, $this->bookRepository->findPublishedBooksByCategoryId($devicesCategory->getId()));
     }
 
     private function createBook(string $title, BookCategory $category): Book
