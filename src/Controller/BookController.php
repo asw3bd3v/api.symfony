@@ -21,7 +21,7 @@ class BookController extends AbstractController
     #[Route(path: '/api/v1/category/{id}/books', methods: ['GET'])]
     #[OA\Response(
         response: 200,
-        description: 'Return books inside a category',
+        description: 'Return published books inside a category',
         content: new Model(type: BookListResponse::class)
     )]
     #[OA\Response(
@@ -37,7 +37,7 @@ class BookController extends AbstractController
     #[Route(path: '/api/v1/book/{id}', methods: ['GET'])]
     #[OA\Response(
         response: 200,
-        description: 'Return book detail information',
+        description: 'Return published book detail information',
         content: new Model(type: BookDetails::class)
     )]
     #[OA\Response(

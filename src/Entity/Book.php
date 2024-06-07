@@ -60,7 +60,7 @@ class Book
     private Collection $reviews;
 
     #[ORM\JoinColumn(nullable: false)]
-    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     private UserInterface $user;
 
     public function __construct()
