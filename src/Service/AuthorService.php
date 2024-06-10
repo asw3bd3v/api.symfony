@@ -31,12 +31,17 @@ class AuthorService
     public function uploadCover(int $id, UploadedFile $file): UploadCoverResponse
     {
         $book = $this->bookRepository->getUserBookById($id, $this->security->getUser());
+        $oldImage = $book->getImage();
 
         $link = $this->uploadService->uploadBookFile($id, $file);
 
         $book->setImage($link);
 
         $this->entityManager->flush();
+
+        if (null !== $oldImage) {
+            $this->uploadService->deleteBookFile($book->getId(), basename($oldImage));
+        }
 
         return new UploadCoverResponse($link);
     }
