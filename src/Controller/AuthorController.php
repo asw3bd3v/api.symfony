@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Attribute\RequestBody;
 use App\Model\Author\BookListResponse;
 use App\Model\Author\CreateBookRequest;
+use App\Model\Author\PublishBookRequest;
 use App\Model\ErrorResponse;
 use App\Model\IdResponse;
 use App\Service\AuthorService;
@@ -18,6 +19,28 @@ class AuthorController extends AbstractController
 {
     public function __construct(private AuthorService $authorService)
     {
+    }
+
+    #[Route(path: '/api/v1/author/book/{id}/publish', methods: ['POST'])]
+    #[OA\Tag(name: 'Author API')]
+    #[OA\Response(response: 200, description: 'Publish a book')]
+    #[OA\Response(response: 400, description: 'Validation failed', attachables: [new Model(type: ErrorResponse::class)])]
+    #[OA\RequestBody(attachables: [new Model(type: PublishBookRequest::class)])]
+    public function publish(int $id, #[RequestBody] PublishBookRequest $request): Response
+    {
+        $this->authorService->publish($id, $request);
+
+        return $this->json(null);
+    }
+
+    #[Route(path: '/api/v1/author/book/{id}/unpublish', methods: ['POST'])]
+    #[OA\Tag(name: 'Author API')]
+    #[OA\Response(response: 200, description: 'Unpublish a book')]
+    public function unpublish(int $id): Response
+    {
+        $this->authorService->unpublish($id);
+
+        return $this->json(null);
     }
 
     #[Route(path: "/api/v1/author/books", name: "author_books", methods: ["GET"])]
