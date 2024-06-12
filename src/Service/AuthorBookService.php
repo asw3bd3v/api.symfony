@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\Book;
 use App\Exception\BookAlreadyExistsException;
+use App\Mapper\BookMapper;
+use App\Model\Author\BookDetails;
 use App\Model\Author\BookListItem;
 use App\Model\Author\BookListResponse;
 use App\Model\Author\CreateBookRequest;
@@ -65,6 +67,17 @@ class AuthorBookService
         $this->bookRepository->saveAndCommit($book);
 
         return new IdResponse($book->getId());
+    }
+
+    public function getBook(int $id): BookDetails
+    {
+        $book = $this->bookRepository->getBookById($id);
+
+        return BookMapper::map($book, new BookDetails())
+            ->setIsbn($book->getIsbn())
+            ->setDescription($book->getDescription())
+            ->setFormats(BookMapper::mapFormats($book))
+            ->setCategories(BookMapper::mapCategories($book));
     }
 
     public function deleteBook(int $id): void

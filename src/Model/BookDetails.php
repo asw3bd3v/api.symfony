@@ -7,7 +7,7 @@ class BookDetails
     private int $id;
     private string $title;
     private string $slug;
-    private string $image;
+    private ?string $image;
     private array $authors;
     private bool $meap;
     private int $publicationDate;
@@ -60,12 +60,12 @@ class BookDetails
         return $this;
     }
 
-    public function getImage(): string
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(?string $image): static
     {
         $this->image = $image;
 
