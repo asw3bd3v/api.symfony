@@ -83,8 +83,24 @@ class BookRepository extends ServiceEntityRepository
         return $book;
     }
 
+    public function getBookById(int $id): ?Book
+    {
+        $book = $this->find($id);
+
+        if (null === $book) {
+            throw new BookNotFoundException();
+        }
+
+        return $book;
+    }
+
     public function existsBySlug(string $slug): bool
     {
         return null !== $this->findOneBy(['slug' => $slug]);
+    }
+
+    public function existsUserBookById(int $id, UserInterface $user): bool
+    {
+        return null !== $this->findOneBy(['id' => $id, 'user' => $user]);
     }
 }
