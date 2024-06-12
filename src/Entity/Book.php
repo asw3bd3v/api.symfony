@@ -155,6 +155,13 @@ class Book
         return $this->categories;
     }
 
+    public function setCategories(Collection $categories): static
+    {
+        $this->categories = $categories;
+
+        return $this;
+    }
+
     public function addCategory(BookCategory $category): static
     {
         if (!$this->categories->contains($category)) {

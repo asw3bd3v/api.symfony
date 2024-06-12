@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\BookFormat;
+use App\Exception\BookFormatNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +17,14 @@ class BookFormatRepository extends ServiceEntityRepository
         parent::__construct($registry, BookFormat::class);
     }
 
-    //    /**
-    //     * @return BookFormat[] Returns an array of BookFormat objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('b.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getById(int $id): BookFormat
+    {
+        $format = $this->find($id);
 
-    //    public function findOneBySomeField($value): ?BookFormat
-    //    {
-    //        return $this->createQueryBuilder('b')
-    //            ->andWhere('b.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (null === $format) {
+            throw new BookFormatNotFoundException();
+        }
+
+        return $format;
+    }
 }
