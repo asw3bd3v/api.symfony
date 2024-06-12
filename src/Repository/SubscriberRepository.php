@@ -18,31 +18,22 @@ class SubscriberRepository extends ServiceEntityRepository
 
     public function existsByEmail(string $email): bool
     {
-        return null !== $this->findOneBy(["email"=> $email]);
+        return null !== $this->findOneBy(["email" => $email]);
     }
 
-    //    /**
-    //     * @return Subscriber[] Returns an array of Subscriber objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function save(Subscriber $subscriber): void
+    {
+        $this->getEntityManager()->persist($subscriber);
+    }
 
-    //    public function findOneBySomeField($value): ?Subscriber
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function commit(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    public function saveAndCommit(Subscriber $subscriber): void
+    {
+        $this->save($subscriber);
+        $this->commit();
+    }
 }

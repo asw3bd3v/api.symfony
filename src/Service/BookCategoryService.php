@@ -10,14 +10,12 @@ use App\Model\BookCategoryListResponse;
 use App\Model\BookCategoryUpdateRequest;
 use App\Model\IdResponse;
 use App\Repository\BookCategoryRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class BookCategoryService
 {
     public function __construct(
         private BookCategoryRepository $bookCategoryRepository,
-        private EntityManagerInterface $entityManager,
         private SluggerInterface $slugger,
     ) {
     }
@@ -46,8 +44,7 @@ class BookCategoryService
             throw new BookCategoryNotEmptyException($booksCount);
         }
 
-        $this->entityManager->remove($category);
-        $this->entityManager->flush();
+        $this->bookCategoryRepository->removeAndCommit($category);
     }
 
     public function getCategories(): BookCategoryListResponse
@@ -75,7 +72,6 @@ class BookCategoryService
             ->setTitle($updateRequest->getTitle())
             ->setSlug($slug);
 
-        $this->entityManager->persist($category);
-        $this->entityManager->flush();
+        $this->bookCategoryRepository->saveAndCommit($category);
     }
 }

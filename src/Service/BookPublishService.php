@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 class BookPublishService
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
         private BookRepository $bookRepository,
     ) {
     }
@@ -30,6 +29,6 @@ class BookPublishService
 
         $book->setPublicationDate($dateTime);
 
-        $this->entityManager->flush();
+        $this->bookRepository->commit();
     }
 }

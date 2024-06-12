@@ -3,13 +3,11 @@
 namespace App\Service;
 
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 
 class RoleService
 {
     public function __construct(
         private UserRepository $userRepository,
-        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -29,7 +27,6 @@ class RoleService
 
         $user->setRoles([$role]);
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->userRepository->commit();
     }
 }

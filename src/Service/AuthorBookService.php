@@ -10,7 +10,6 @@ use App\Model\Author\CreateBookRequest;
 use App\Model\Author\UploadCoverResponse;
 use App\Model\IdResponse;
 use App\Repository\BookRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -18,7 +17,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class AuthorBookService
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
         private BookRepository $bookRepository,
         private SluggerInterface $slugger,
         private UploadService $uploadService,
@@ -34,7 +32,7 @@ class AuthorBookService
 
         $book->setImage($link);
 
-        $this->entityManager->flush();
+        $this->bookRepository->commit();
 
         if (null !== $oldImage) {
             $this->uploadService->deleteBookFile($book->getId(), basename($oldImage));
@@ -64,8 +62,7 @@ class AuthorBookService
             ->setMeap(false)
             ->setUser($user);
 
-        $this->entityManager->persist($book);
-        $this->entityManager->flush();
+        $this->bookRepository->saveAndCommit($book);
 
         return new IdResponse($book->getId());
     }
@@ -74,8 +71,7 @@ class AuthorBookService
     {
         $book = $this->bookRepository->getBookById($id);
 
-        $this->entityManager->remove($book);
-        $this->entityManager->flush();
+        $this->bookRepository->removeAndCommit($book);
     }
 
     private function map(Book $book): BookListItem
