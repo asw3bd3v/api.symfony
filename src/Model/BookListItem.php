@@ -9,7 +9,6 @@ class BookListItem
     private string $slug;
     private string $image;
     private array $authors;
-    private bool $meap;
     private int $publicationDate;
 
     public function getId(): int
@@ -74,18 +73,6 @@ class BookListItem
     public function setAuthors(array $authors): static
     {
         $this->authors = $authors;
-
-        return $this;
-    }
-
-    public function isMeap(): bool
-    {
-        return $this->meap;
-    }
-
-    public function setMeap(bool $meap): static
-    {
-        $this->meap = $meap;
 
         return $this;
     }

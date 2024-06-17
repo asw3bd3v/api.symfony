@@ -42,7 +42,6 @@ class BookRepositoryTest extends AbstractRepositoryTest
             ->setPublicationDate(new \DateTimeImmutable())
             ->setTitle($title)
             ->setAuthors(['author'])
-            ->setMeap(false)
             ->setIsbn('123321')
                 ->setDescription('test description')
             ->setSlug($title)

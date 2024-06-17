@@ -53,7 +53,6 @@ class ReviewControllerTest extends AbstractControllerTest
             ->setTitle("Test book")
             ->setSlug("test-book")
             ->setImage("http://localhost.png")
-            ->setMeap(true)
             ->setIsbn('123321')
             ->setDescription('test description')
             ->setPublicationDate(new \DateTimeImmutable(""))

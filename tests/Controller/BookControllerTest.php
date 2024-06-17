@@ -26,13 +26,12 @@ class BookControllerTest extends AbstractControllerTest
                     'type' => 'array',
                     'items' => [
                         'type' => 'object',
-                        'required' => ['id', 'title', 'slug', 'image', 'authors', 'meap', 'publicationDate'],
+                        'required' => ['id', 'title', 'slug', 'image', 'authors', 'publicationDate'],
                         'properties' => [
                             'id' => ['type' => 'integer'],
                             'title' => ['type' => 'string'],
                             'slug' => ['type' => 'string'],
                             'image' => ['type' => 'string'],
-                            'meap' => ['type' => 'boolean'],
                             'publicationDate' => ['type' => 'integer'],
                             'authors' => [
                                 'type' => 'array',
@@ -58,14 +57,13 @@ class BookControllerTest extends AbstractControllerTest
         $this->assertJsonDocumentMatchesSchema($responseContent, [
             'type' => 'object',
             'required' => [
-                'id', 'title', 'slug', 'image', 'authors', 'meap', 'publicationDate', 'rating', 'reviews', 'categories', 'formats',
+                'id', 'title', 'slug', 'image', 'authors', 'publicationDate', 'rating', 'reviews', 'categories', 'formats',
             ],
             'properties' => [
                 'id' => ['type' => 'integer'],
                 'title' => ['type' => 'string'],
                 'slug' => ['type' => 'string'],
                 'image' => ['type' => 'string'],
-                'meap' => ['type' => 'boolean'],
                 'publicationDate' => ['type' => 'integer'],
                 'authors' => [
                     'type' => 'array',
@@ -101,7 +99,6 @@ class BookControllerTest extends AbstractControllerTest
                 ->setTitle("Test book")
                 ->setSlug("test-book")
                 ->setImage("http://localhost.png")
-                ->setMeap(true)
                 ->setIsbn('123321')
                 ->setDescription('test description')
                 ->setPublicationDate(new \DateTimeImmutable(""))
@@ -130,7 +127,6 @@ class BookControllerTest extends AbstractControllerTest
             ->setTitle("Test book")
             ->setSlug("test-book")
             ->setImage("http://localhost.png")
-            ->setMeap(true)
             ->setIsbn('123321')
             ->setDescription('test description')
             ->setPublicationDate(new \DateTimeImmutable(""))

@@ -104,7 +104,6 @@ class BookServiceTest extends AbstractTestCase
             ->setTitle('Test Book')
             ->setImage('http://localhost/test.png')
             ->setAuthors(['Tester'])
-            ->setMeap(false)
             ->setCategories([
                 new BookCategoryModel(1, 'Category', 'category'),
             ])
@@ -148,7 +147,6 @@ class BookServiceTest extends AbstractTestCase
         $book = (new Book())
             ->setTitle('Test Book')
             ->setSlug('test-book')
-            ->setMeap(false)
             ->setIsbn('123321')
             ->setDescription('test description')
             ->setAuthors(['Tester'])
@@ -168,7 +166,6 @@ class BookServiceTest extends AbstractTestCase
             ->setId(123)
             ->setTitle('Test Book')
             ->setSlug('test-book')
-            ->setMeap(false)
             ->setAuthors(['Tester'])
             ->setImage('http://localhost/test.png')
             ->setPublicationDate((new \DateTimeImmutable('2020-10-10'))->getTimestamp());

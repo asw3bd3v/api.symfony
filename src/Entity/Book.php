@@ -32,9 +32,6 @@ class Book
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     private ?\DateTimeInterface $publicationDate = null;
 
-    #[ORM\Column]
-    private ?bool $meap = null;
-
     /**
      * @var Collection<int, BookCategory>
      */
@@ -131,18 +128,6 @@ class Book
     public function setPublicationDate(?\DateTimeInterface $publicationDate): static
     {
         $this->publicationDate = $publicationDate;
-
-        return $this;
-    }
-
-    public function isMeap(): ?bool
-    {
-        return $this->meap;
-    }
-
-    public function setMeap(bool $meap): static
-    {
-        $this->meap = $meap;
 
         return $this;
     }
