@@ -22,12 +22,20 @@
         </testsuite>
     </testsuites>
 
-    <!-- <coverage>
+    <source>
         <include>
             <directory suffix=".php">src</directory>
         </include>
-    </coverage>
 
+        <exclude>
+            <directory suffix=".php">src/DataFixtures</directory>
+            <directory suffix=".php">src/Entity</directory>
+            <directory suffix=".php">src/Exception</directory>
+            <directory suffix=".php">src/Model</directory>
+        </exclude>
+    </source>
+
+    <!-- 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners> -->
