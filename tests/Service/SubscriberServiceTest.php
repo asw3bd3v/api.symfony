@@ -8,7 +8,6 @@ use App\Model\SubscriberRequest;
 use App\Repository\SubscriberRepository;
 use App\Service\SubscriberService;
 use App\Tests\AbstractTestCase;
-use Doctrine\ORM\EntityManagerInterface;
 
 class SubscriberServiceTest extends AbstractTestCase
 {
@@ -21,7 +20,6 @@ class SubscriberServiceTest extends AbstractTestCase
         parent::setUp();
 
         $this->repository = $this->createMock(SubscriberRepository::class);
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
     }
 
     public function testSubscribeAlreadyExists(): void
@@ -36,7 +34,7 @@ class SubscriberServiceTest extends AbstractTestCase
         $request = new SubscriberRequest();
         $request->setEmail(self::EMAIL);
 
-        (new SubscriberService($this->repository, $this->entityManager))
+        (new SubscriberService($this->repository))
             ->subscribe($request);
     }
 
@@ -50,17 +48,14 @@ class SubscriberServiceTest extends AbstractTestCase
         $expectedSubscriber = new Subscriber();
         $expectedSubscriber->setEmail(self::EMAIL);
 
-        $this->entityManager->expects($this->once())
-            ->method("persist")
-            ->with($expectedSubscriber);
-
-        $this->entityManager->expects($this->once())
-            ->method("flush");
-
         $request = new SubscriberRequest();
         $request->setEmail(self::EMAIL);
 
-        (new SubscriberService($this->repository, $this->entityManager))
+        $this->repository->expects($this->once())
+            ->method('saveAndCommit')
+            ->with($expectedSubscriber);
+
+        (new SubscriberService($this->repository))
             ->subscribe($request);
     }
 }

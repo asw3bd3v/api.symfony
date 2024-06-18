@@ -18,6 +18,8 @@ use App\Service\BookService;
 use App\Service\Rating;
 use App\Service\RatingService;
 use App\Tests\AbstractTestCase;
+use App\Tests\MockUtils;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class BookServiceTest extends AbstractTestCase
 {
@@ -101,11 +103,11 @@ class BookServiceTest extends AbstractTestCase
             ->setRating(5.5)
             ->setReviews(10)
             ->setSlug('test-book')
-            ->setTitle('Test Book')
-            ->setImage('http://localhost/test.png')
+            ->setTitle('Test book')
+            ->setImage('http://localhost.png')
             ->setAuthors(['Tester'])
             ->setCategories([
-                new BookCategoryModel(1, 'Category', 'category'),
+                new BookCategoryModel(1, 'Devices', 'devices'),
             ])
             ->setPublicationDate((new \DateTimeImmutable('2020-10-10'))->getTimestamp())
             ->setFormats([$format]);
@@ -124,38 +126,20 @@ class BookServiceTest extends AbstractTestCase
 
     private function createBookEntity(): Book
     {
-        $category = (new BookCategory())
-            ->setTitle('Category')
-            ->setSlug('category');
-
+        $category = MockUtils::createBookCategory();
         $this->setEntityId($category, 1);
 
-        $format = (new BookFormat())
-            ->setTitle('format')
-            ->setDescription('description format')
-            ->setComment(null);
-
+        $format = MockUtils::createBookFormat();
         $this->setEntityId($format, 1);
 
-        $join = (new BookToBookFormat())
-            ->setPrice(123.55)
-            ->setFormat($format)
-            ->setDiscountPercent(5);
+        $book = MockUtils::createBook();
+        $book->addCategory($category);
+        $this->setEntityId($book, 123);
 
+        $join = MockUtils::createBookFormatLink($book, $format);
         $this->setEntityId($join, 1);
 
-        $book = (new Book())
-            ->setTitle('Test Book')
-            ->setSlug('test-book')
-            ->setIsbn('123321')
-            ->setDescription('test description')
-            ->setAuthors(['Tester'])
-            ->setImage('http://localhost/test.png')
-            ->setPublicationDate(new \DateTimeImmutable('2020-10-10'))
-            ->addCategory($category)
-            ->addFormat($join);
-
-        $this->setEntityId($book, 123);
+        $book->setFormats(new ArrayCollection([$join]));
 
         return $book;
     }
@@ -164,10 +148,10 @@ class BookServiceTest extends AbstractTestCase
     {
         return (new BookListItem())
             ->setId(123)
-            ->setTitle('Test Book')
+            ->setTitle('Test book')
             ->setSlug('test-book')
             ->setAuthors(['Tester'])
-            ->setImage('http://localhost/test.png')
+            ->setImage('http://localhost.png')
             ->setPublicationDate((new \DateTimeImmutable('2020-10-10'))->getTimestamp());
     }
 }

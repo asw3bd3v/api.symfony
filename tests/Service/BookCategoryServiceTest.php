@@ -2,6 +2,7 @@
 
 namespace App\Tests\Service;
 
+use Symfony\Component\String\Slugger\SluggerInterface;
 use App\Entity\BookCategory;
 use App\Model\BookCategory as BookCategoryModel;
 use App\Model\BookCategoryListResponse;
@@ -25,7 +26,9 @@ class BookCategoryServiceTest extends AbstractTestCase
             ->method('findAllSortedByTitle')
             ->willReturn([$bookCategory]);
 
-        $service = new BookCategoryService($repository);
+        $slugger = $this->createMock(SluggerInterface::class);
+
+        $service = new BookCategoryService($repository, $slugger);
 
         $expected = new BookCategoryListResponse([
             new BookCategoryModel(1, 'Test', 'test'),

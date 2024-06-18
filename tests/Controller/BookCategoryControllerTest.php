@@ -3,18 +3,14 @@
 namespace App\Tests\Controller;
 
 use App\Tests\AbstractControllerTest;
-use App\Entity\BookCategory;
+use App\Tests\MockUtils;
 
 class BookCategoryControllerTest extends AbstractControllerTest
 {
 
     public function testCategories(): void
     {
-        $this->entityManager->persist(
-            (new BookCategory())
-                ->setTitle("Devices")
-                ->setSlug("devices")
-        );
+        $this->entityManager->persist(MockUtils::createBookCategory());
 
         $this->entityManager->flush();
 
@@ -23,7 +19,7 @@ class BookCategoryControllerTest extends AbstractControllerTest
 
         $this->assertResponseIsSuccessful();
         $this->assertJsonDocumentMatchesSchema($responseContent, [
-            'type'=> 'object',
+            'type' => 'object',
             'required' => ['items'],
             'properties' => [
                 'items' => [

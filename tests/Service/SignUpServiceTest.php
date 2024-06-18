@@ -8,7 +8,6 @@ use App\Model\SignUpRequest;
 use App\Repository\UserRepository;
 use App\Service\SignUpService;
 use App\Tests\AbstractTestCase;
-use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Http\Authentication\AuthenticationSuccessHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
@@ -17,7 +16,6 @@ class SignUpServiceTest extends AbstractTestCase
 {
     private $hasher;
     private $userRepository;
-    private $entityManager;
     private $successHandler;
 
     protected function setUp(): void
@@ -26,7 +24,6 @@ class SignUpServiceTest extends AbstractTestCase
 
         $this->hasher = $this->createMock(UserPasswordHasher::class);
         $this->userRepository = $this->createMock(UserRepository::class);
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
         $this->successHandler = $this->createMock(AuthenticationSuccessHandler::class);
     }
 
@@ -65,12 +62,9 @@ class SignUpServiceTest extends AbstractTestCase
             ->with($expectedHasherUser, 'testtest')
             ->willReturn('hashed_password');
 
-        $this->entityManager->expects($this->once())
-            ->method('persist')
+        $this->userRepository->expects($this->once())
+            ->method('saveAndCommit')
             ->with($expectedUser);
-
-        $this->entityManager->expects($this->once())
-            ->method('flush');
 
         $this->successHandler->expects($this->once())
             ->method('handleAuthenticationSuccess')
@@ -88,6 +82,6 @@ class SignUpServiceTest extends AbstractTestCase
 
     private function createService(): SignUpService
     {
-        return new SignUpService($this->hasher, $this->userRepository, $this->entityManager, $this->successHandler);
+        return new SignUpService($this->hasher, $this->userRepository, $this->successHandler);
     }
 }

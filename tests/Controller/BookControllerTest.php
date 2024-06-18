@@ -2,19 +2,28 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Book;
-use App\Entity\BookCategory;
-use App\Entity\BookFormat;
-use App\Entity\BookToBookFormat;
 use App\Tests\AbstractControllerTest;
+use App\Tests\MockUtils;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class BookControllerTest extends AbstractControllerTest
 {
     public function testBooksByCategory(): void
     {
-        $categoryId = $this->createCategory();
+        $user = MockUtils::createUser();
+        $this->entityManager->persist($user);
 
-        $this->client->request('GET', '/api/v1/category/' . $categoryId . '/books');
+        $bookCategory = MockUtils::createBookCategory();
+        $this->entityManager->persist($bookCategory);
+
+        $book = MockUtils::createBook()
+            ->setCategories(new ArrayCollection([$bookCategory]))
+            ->setUser($user);
+        $this->entityManager->persist($book);
+
+        $this->entityManager->flush();
+
+        $this->client->request('GET', '/api/v1/category/' . $bookCategory->getId() . '/books');
         $responseContent = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
@@ -48,9 +57,25 @@ class BookControllerTest extends AbstractControllerTest
 
     public function testBookById(): void
     {
-        $bookId = $this->createBook();
+        $user = MockUtils::createUser();
+        $this->entityManager->persist($user);
 
-        $this->client->request('GET', '/api/v1/book/' . $bookId);
+        $bookCategory = MockUtils::createBookCategory();
+        $this->entityManager->persist($bookCategory);
+
+        $format = MockUtils::createBookFormat();
+        $this->entityManager->persist($format);
+
+        $book = MockUtils::createBook()
+            ->setCategories(new ArrayCollection([$bookCategory]))
+            ->setUser($user);
+        $this->entityManager->persist($book);
+
+        $this->entityManager->persist(MockUtils::createBookFormatLink($book, $format));
+
+        $this->entityManager->flush();
+
+        $this->client->request('GET', '/api/v1/book/' . $book->getId());
         $responseContent = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertResponseIsSuccessful();
@@ -88,7 +113,7 @@ class BookControllerTest extends AbstractControllerTest
             ]
         ]);
     }
-
+    /* 
     private function createCategory(): int
     {
         $bookCategory = (new BookCategory())->setTitle('Devices')->setSlug('devices');
@@ -145,5 +170,5 @@ class BookControllerTest extends AbstractControllerTest
         $this->entityManager->flush();
 
         return $book->getId();
-    }
+    } */
 }

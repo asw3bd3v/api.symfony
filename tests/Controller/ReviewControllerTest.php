@@ -2,17 +2,21 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Book;
-use App\Entity\Review;
 use App\Tests\AbstractControllerTest;
+use App\Tests\MockUtils;
 
 class ReviewControllerTest extends AbstractControllerTest
 {
     public function testReview(): void
     {
-        $book = $this->createBook();
+        $user = MockUtils::createUser();
+        $this->entityManager->persist($user);
 
-        $this->createReview($book);
+        $book = MockUtils::createBook()
+            ->setUser($user);
+        $this->entityManager->persist($book);
+
+        $this->entityManager->persist(MockUtils::createReview($book));
 
         $this->entityManager->flush();
 
@@ -45,32 +49,5 @@ class ReviewControllerTest extends AbstractControllerTest
                 ]
             ]
         ]);
-    }
-
-    private function createBook(): Book
-    {
-        $book = (new Book())
-            ->setTitle("Test book")
-            ->setSlug("test-book")
-            ->setImage("http://localhost.png")
-            ->setIsbn('123321')
-            ->setDescription('test description')
-            ->setPublicationDate(new \DateTimeImmutable(""))
-            ->setAuthors(['Tester']);
-
-        $this->entityManager->persist($book);
-
-        return $book;
-    }
-
-    private function createReview(Book $book): void
-    {
-        $this->entityManager->persist((new Review())
-                ->setAuthor('tester')
-                ->setContent('test content')
-                ->setCreatedAt(new \DateTimeImmutable())
-                ->setRating(5)
-                ->setBook($book)
-        );
     }
 }

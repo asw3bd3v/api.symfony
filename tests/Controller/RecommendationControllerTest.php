@@ -2,8 +2,8 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Book;
 use App\Tests\AbstractControllerTest;
+use App\Tests\MockUtils;
 use Hoverfly\Client as HoverflyClient;
 use Hoverfly\Model\RequestFieldMatcher;
 use Hoverfly\Model\Response;
@@ -21,7 +21,15 @@ class RecommendationControllerTest extends AbstractControllerTest
 
     public function testRecommendationsByBookId(): void
     {
-        $id = $this->createBook();
+        $user = MockUtils::createUser();
+        $this->entityManager->persist($user);
+
+        $book = MockUtils::createBook()
+            ->setUser($user);
+        $this->entityManager->persist($book);
+
+        $this->entityManager->flush();
+
         $requestedId = 123;
 
         $this->hoverflyClient->simulate(
@@ -38,7 +46,7 @@ class RecommendationControllerTest extends AbstractControllerTest
                 ->willReturn(Response::json([
                     'ts' => 12345,
                     'id' => $requestedId,
-                    'recommendations' => [['id' => $id]]
+                    'recommendations' => [['id' => $book->getId()]]
                 ]))
         );
 
@@ -66,23 +74,6 @@ class RecommendationControllerTest extends AbstractControllerTest
                 ]
             ]
         ]);
-    }
-
-    private function createBook(): int
-    {
-        $book = (new Book())
-            ->setTitle("Test book")
-            ->setSlug("test-book")
-            ->setImage("http://localhost.png")
-            ->setIsbn('123321')
-            ->setDescription('test description')
-            ->setPublicationDate(new \DateTimeImmutable(""))
-            ->setAuthors(['Tester']);
-
-        $this->entityManager->persist($book);
-        $this->entityManager->flush();
-
-        return $book->getId();
     }
 
     private function setUpHoverfly(): void
