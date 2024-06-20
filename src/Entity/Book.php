@@ -60,11 +60,18 @@ class Book
     #[ORM\ManyToOne(targetEntity: User::class)]
     private UserInterface $user;
 
+    /**
+     * @var Collection<int, BookChapter>
+     */
+    #[ORM\OneToMany(targetEntity: BookChapter::class, mappedBy: 'book', orphanRemoval: true)]
+    private Collection $chapters;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->formats = new ArrayCollection();
         $this->reviews = new ArrayCollection();
+        $this->chapters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -262,6 +269,36 @@ class Book
     public function setUser(UserInterface $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BookChapter>
+     */
+    public function getChapters(): Collection
+    {
+        return $this->chapters;
+    }
+
+    public function addChapter(BookChapter $chapter): static
+    {
+        if (!$this->chapters->contains($chapter)) {
+            $this->chapters->add($chapter);
+            $chapter->setBook($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChapter(BookChapter $chapter): static
+    {
+        if ($this->chapters->removeElement($chapter)) {
+            // set the owning side to null (unless already changed)
+            if ($chapter->getBook() === $this) {
+                $chapter->setBook(null);
+            }
+        }
 
         return $this;
     }

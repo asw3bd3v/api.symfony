@@ -14,36 +14,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class BookRepository extends ServiceEntityRepository
 {
+    use RepositoryModifyTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Book::class);
-    }
-
-    public function save(Book $book): void
-    {
-        $this->getEntityManager()->persist($book);
-    }
-
-    public function commit(): void
-    {
-        $this->getEntityManager()->flush();
-    }
-
-    public function saveAndCommit(Book $book): void
-    {
-        $this->save($book);
-        $this->commit();
-    }
-
-    public function remove(Book $book): void
-    {
-        $this->getEntityManager()->remove($book);
-    }
-
-    public function removeAndCommit(Book $book): void
-    {
-        $this->remove($book);
-        $this->commit();
     }
 
     public function saveBookFormatReference(BookToBookFormat $bookToBookFormat): void
