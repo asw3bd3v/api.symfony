@@ -5,7 +5,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CreateBookRequest
 {
-    #[NotBlank()]
+    #[NotBlank]
     private string $title;
 
     public function getTitle(): string

@@ -2,16 +2,24 @@
 
 namespace App\Service;
 
+use App\Entity\Book;
 use App\Entity\BookChapter;
+use App\Exception\BookChapterInvalidSortException;
 use App\Model\Author\CreateBookChapterRequest;
 use App\Model\Author\UpdateBookChapterRequest;
+use App\Model\BookChapterTreeResponse;
 use App\Model\IdResponse;
 use App\Repository\BookChapterRepository;
 use App\Repository\BookRepository;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Model\BookChapter as BookChapterModel;
 
 class AuthorBookChapterService
 {
+    private const MAX_LEVEL = 3;
+    private const SORT_STEP = 1;
+    private const MIN_LEVEL = 1;
+
     public function __construct(
         private BookRepository $bookRepository,
         private BookChapterRepository $bookChapterRepository,
@@ -23,10 +31,27 @@ class AuthorBookChapterService
     {
         $book = $this->bookRepository->getBookById($bookId);
         $title = $request->getTitle();
+        $parentId = $request->getParentId();
+        $parent = null;
+        $level = self::MIN_LEVEL;
+
+        if (null !== $parentId) {
+            $parent = $this->bookChapterRepository->getById($parentId);
+            $parentLevel = $parent->getLevel();
+
+            if (self::MAX_LEVEL === $parentLevel) {
+                throw new BookChapterInvalidSortException('Max level is reached');
+            }
+
+            $level = $parentLevel + 1;
+        }
 
         $chapter = (new BookChapter)
             ->setTitle($title)
             ->setSlug($this->slugger->slug($title))
+            ->setParent($parent)
+            ->setLevel($level)
+            ->setSort($this->getNextMaxSort($book, $level))
             ->setBook($book);
 
         $this->bookChapterRepository->saveAndCommit($chapter);
@@ -51,5 +76,40 @@ class AuthorBookChapterService
         $chapter = $this->bookChapterRepository->getBookById($id);
 
         $this->bookChapterRepository->removeAndCommit($chapter);
+    }
+
+    public function getChaptersTree(int $bookId): BookChapterTreeResponse
+    {
+        $book = $this->bookRepository->getBookById($bookId);
+        $chapters = $this->bookChapterRepository->findSortedChaptersByBook($book);
+        $response = new BookChapterTreeResponse();
+
+        /** @var array<int, BookChapterModel> $index */
+        $index = [];
+
+        foreach ($chapters as $chapter) {
+            $model = new BookChapterModel(
+                $chapter->getId(),
+                $chapter->getTitle(),
+                $chapter->getSlug(),
+            );
+
+            $index[$chapter->getId()] = $model;
+
+            if (!$chapter->hasParent()) {
+                $response->addItem($model);
+                continue;
+            }
+
+            $parent = $chapter->getParent();
+            $index[$parent->getId()]->addItem($model);
+        }
+
+        return $response;
+    }
+
+    private function getNextMaxSort(Book $book, int $level): int
+    {
+        return $this->bookChapterRepository->getMaxSort($book, $level) + self::SORT_STEP;
     }
 }

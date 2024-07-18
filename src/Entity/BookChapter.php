@@ -19,6 +19,16 @@ class BookChapter
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $sort = 0;
+
+    #[ORM\Column(type: 'integer')]
+    private int $level;
+
+    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: BookChapter::class)]
+    private ?BookChapter $parent = null;
+
     #[ORM\ManyToOne(inversedBy: 'chapters')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Book $book = null;
@@ -62,5 +72,46 @@ class BookChapter
         $this->book = $book;
 
         return $this;
+    }
+
+    public function getSort(): int
+    {
+        return $this->sort;
+    }
+
+    public function setSort(int $sort): self
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    public function setLevel(int $level): self
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    public function getParent(): ?BookChapter
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?BookChapter $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    public function hasParent(): bool
+    {
+        return null !== $this->parent;
     }
 }
