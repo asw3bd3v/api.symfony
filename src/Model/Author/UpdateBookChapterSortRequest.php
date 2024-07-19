@@ -6,7 +6,7 @@ use App\Validation\AtLeastOneRequired;
 use Symfony\Component\Validator\Constraints\Positive;
 
 #[AtLeastOneRequired('nextId', 'previousId')]
-class UpdateChapterSortRequest
+class UpdateBookChapterSortRequest
 {
     #[Positive]
     private int $id;

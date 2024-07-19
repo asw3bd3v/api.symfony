@@ -7,6 +7,7 @@ use App\Entity\BookChapter;
 use App\Exception\BookChapterInvalidSortException;
 use App\Model\Author\CreateBookChapterRequest;
 use App\Model\Author\UpdateBookChapterRequest;
+use App\Model\Author\UpdateBookChapterSortRequest;
 use App\Model\BookChapterTreeResponse;
 use App\Model\IdResponse;
 use App\Repository\BookChapterRepository;
@@ -106,6 +107,28 @@ class AuthorBookChapterService
         }
 
         return $response;
+    }
+
+    public function updateChapterSort(UpdateBookChapterSortRequest $request): void
+    {
+        $chapter = $this->bookChapterRepository->getById($request->getId());
+        $sortContext = SortContext::fromNeighbours($request->getNextId(), $request->getPreviousId());
+        $nearChapter = $this->bookChapterRepository->getById($sortContext->getNearId());
+        $level = $nearChapter->getLevel();
+
+        if (SortPosition::AsLast === $sortContext->getPosition()) {
+            $sort = $this->getNextMaxSort($chapter->getBook(), $level);
+        } else {
+            $sort = $nearChapter->getSort();
+            $this->bookChapterRepository->increaseSortFrom($sort, $chapter->getBook(), $level, self::SORT_STEP);
+        }
+
+        $chapter
+            ->setLevel($level)
+            ->setSort($sort)
+            ->setParent($nearChapter->getParent());
+
+        $this->bookChapterRepository->saveAndCommit($chapter);
     }
 
     private function getNextMaxSort(Book $book, int $level): int
