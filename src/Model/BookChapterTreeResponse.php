@@ -7,7 +7,7 @@ class BookChapterTreeResponse
     /**
      * @param BookChapter[] $items
      */
-    private function __construct(
+    public function __construct(
         private array $items = [],
     ) {
     }

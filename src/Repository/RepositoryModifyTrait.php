@@ -8,14 +8,14 @@ trait RepositoryModifyTrait
 {
     public function save(object $object): void
     {
-        assert($this->_entityName === $object::class);
-        $this->_em->persist($object);
+        assert($this->getEntityName() === $object::class);
+        $this->getEntityManager()->persist($object);
     }
 
     public function remove(object $object): void
     {
-        assert($this->_entityName === $object::class);
-        $this->_em->remove($object);
+        assert($this->getEntityName() === $object::class);
+        $this->getEntityManager()->remove($object);
     }
 
     public function saveAndCommit(object $object): void
@@ -32,6 +32,6 @@ trait RepositoryModifyTrait
 
     public function commit(): void
     {
-        $this->_em->flush();
+        $this->getEntityManager()->flush();
     }
 }

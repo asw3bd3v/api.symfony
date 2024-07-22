@@ -60,16 +60,13 @@ class AuthorBookChapterService
         return new IdResponse($chapter->getId());
     }
 
-    public function updateChapter(UpdateBookChapterRequest $request): void
+    public function updateChapter(UpdateBookChapterRequest $request, int $id): void
     {
-        $chapter = $this->bookChapterRepository->getBookById($request->getId());
+        $chapter = $this->bookChapterRepository->getById($id);
         $title = $request->getTitle();
+        $chapter->setTitle($title)->setSlug($this->slugger->slug($title)->toString());
 
-        $chapter
-            ->setTitle($title)
-            ->setSlug($this->slugger->slug($title));
-
-        $this->bookChapterRepository->saveAndCommit($chapter);
+        $this->bookChapterRepository->commit();
     }
 
     public function deleteChapter(int $id): void
@@ -109,9 +106,9 @@ class AuthorBookChapterService
         return $response;
     }
 
-    public function updateChapterSort(UpdateBookChapterSortRequest $request): void
+    public function updateChapterSort(UpdateBookChapterSortRequest $request, int $id): void
     {
-        $chapter = $this->bookChapterRepository->getById($request->getId());
+        $chapter = $this->bookChapterRepository->getById($id);
         $sortContext = SortContext::fromNeighbours($request->getNextId(), $request->getPreviousId());
         $nearChapter = $this->bookChapterRepository->getById($sortContext->getNearId());
         $level = $nearChapter->getLevel();
@@ -123,12 +120,9 @@ class AuthorBookChapterService
             $this->bookChapterRepository->increaseSortFrom($sort, $chapter->getBook(), $level, self::SORT_STEP);
         }
 
-        $chapter
-            ->setLevel($level)
-            ->setSort($sort)
-            ->setParent($nearChapter->getParent());
+        $chapter->setLevel($level)->setSort($sort)->setParent($nearChapter->getParent());
 
-        $this->bookChapterRepository->saveAndCommit($chapter);
+        $this->bookChapterRepository->commit();
     }
 
     private function getNextMaxSort(Book $book, int $level): int

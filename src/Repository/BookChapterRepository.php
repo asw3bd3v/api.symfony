@@ -48,7 +48,7 @@ UPDATE App\Entity\BookChapter c SET c.sort = c.sort + :sortStep
 WHERE c.sort >= :sortStart AND c.book = :book AND c.level = :level
 SQL;
 
-        $this->_em->createQuery($sql)
+        $this->getEntityManager()->createQuery($sql)
             ->setParameter('book', $book)
             ->setParameter('level', $level)
             ->setParameter('sortStart', $sortStart)
