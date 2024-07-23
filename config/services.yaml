@@ -19,6 +19,7 @@ parameters:
         App\Exception\BookCategoryAlreadyExistsException: { code: 409, hidden: false}
         App\Exception\BookFormatNotFoundException: { code: 404, hidden: false}
         App\Exception\BookChapterNotFoundException: { code: 404, hidden: false}
+        App\Exception\BookChapterContentNotFoundException: { code: 404, hidden: false}
 services:
     # default configuration for services in *this* file
     _defaults:
