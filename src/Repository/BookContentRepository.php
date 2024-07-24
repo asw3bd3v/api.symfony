@@ -39,7 +39,7 @@ class BookContentRepository extends ServiceEntityRepository
         $query = implode(' ', array_filter([
             'SELECT b FROM App\Entity\BookContent b WHERE b.chapter = :id',
             $onlyPublished ? 'AND b.isPublished = true' : null,
-            'ORDER BY b.id ASC',
+            ' ORDER BY b.id ASC',
         ]));
 
         $query = $this->getEntityManager()
