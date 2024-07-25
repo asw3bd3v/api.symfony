@@ -171,4 +171,54 @@ class BookControllerTest extends AbstractControllerTest
 
         return $book->getId();
     } */
+
+    public function testChapterContent(): void
+    {
+        $user = MockUtils::createUser();
+        $this->entityManager->persist($user);
+
+        $book = MockUtils::createBook()->setUser($user);
+        $this->entityManager->persist($book);
+
+        $bookChapter = MockUtils::createBookChapter($book);
+        $this->entityManager->persist($bookChapter);
+
+        $bookContent = MockUtils::createBookContent($bookChapter);
+        $this->entityManager->persist($bookContent);
+
+        $unpublishedBookContent = MockUtils::createBookContent($bookChapter)->setPublished(false);
+        $this->entityManager->persist($unpublishedBookContent);
+
+        $this->entityManager->flush();
+
+        $url = sprintf('/api/v1/book/%d/chapter/%d/content', $book->getId(), $bookChapter->getId());
+
+        $this->client->request('GET', $url);
+        $responseContent = json_decode($this->client->getResponse()->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertResponseIsSuccessful();
+        $this->assertJsonDocumentMatches($responseContent, ['$.items' => self::countOf(1)]);
+        $this->assertJsonDocumentMatchesSchema($responseContent, [
+            'type' => 'object',
+            'required' => ['items', 'page', 'pages', 'perPage', 'total'],
+            'properties' => [
+                'page' => ['type' => 'integer'],
+                'pages' => ['type' => 'integer'],
+                'perPage' => ['type' => 'integer'],
+                'total' => ['type' => 'integer'],
+                'items' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'object',
+                        'required' => ['id', 'content', 'published'],
+                        'properties' => [
+                            'id' => ['type' => 'integer'],
+                            'content' => ['type' => 'string'],
+                            'published' => ['type' => 'boolean'],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
 }

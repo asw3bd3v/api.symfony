@@ -4,6 +4,8 @@ namespace App\Tests;
 
 use App\Entity\Book;
 use App\Entity\BookCategory;
+use App\Entity\BookChapter;
+use App\Entity\BookContent;
 use App\Entity\BookFormat;
 use App\Entity\BookToBookFormat;
 use App\Entity\Review;
@@ -55,6 +57,25 @@ class MockUtils
             ->setAuthors(['Tester'])
             ->setCategories(new ArrayCollection([]))
             ->setSlug('test-book');
+    }
+
+    public static function createBookChapter(Book $book): BookChapter
+    {
+        return (new BookChapter())
+            ->setTitle('Test chapter')
+            ->setBook($book)
+            ->setSlug('test-chapter')
+            ->setLevel(1)
+            ->setSort(1)
+            ->setParent(null);
+    }
+
+    public static function createBookContent(BookChapter $chapter): BookContent
+    {
+        return (new BookContent())
+            ->setContent('testing content')
+            ->setPublished(true)
+            ->setChapter($chapter);
     }
 
     public static function createReview(Book $book): Review
